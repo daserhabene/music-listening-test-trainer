@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>듣기 시험 트레이너</title>
+
+	<style>
+		:root {
+			--page-bg: #f5f5f5;
+			--text-color: #111111;
+			--muted-color: rgba(0, 0, 0, 0.58);
+			--border-color: rgba(0, 0, 0, 0.14);
+			--surface-color: #ffffff;
+			--control-bg: #ffffff;
+			--control-text: #111111;
+			--progress-track: #dddddd;
+			--progress-fill: #4caf50;
+			--theme-panel-bg: rgba(255, 255, 255, 0.75);
+			--theme-panel-border: rgba(0, 0, 0, 0.08);
+			--shadow-color: rgba(0, 0, 0, 0.08);
+		}
+
+		body {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			padding: 30px;
+			background: var(--page-bg);
+			color: var(--text-color);
+			transition: background 0.2s ease, color 0.2s ease;
+		}
+
+		iframe {
+			margin: 20px auto;
+			max-width: 100%;
+		}
+
+		input {
+			padding: 10px;
+			width: 320px;
+			max-width: 90%;
+			margin: 5px;
+			font-size: 16px;
+			background: var(--control-bg);
+			color: var(--control-text);
+			border: 1px solid var(--border-color);
+			border-radius: 6px;
+			box-sizing: border-box;
+		}
+
+		button {
+			padding: 10px 20px;
+			margin: 5px;
+			font-size: 16px;
+			cursor: pointer;
+			background: var(--control-bg);
+			color: var(--control-text);
+			border: 1px solid var(--border-color);
+			border-radius: 6px;
+		}
+
+		input::placeholder {
+			color: var(--muted-color);
+		}
+
+		#result,
+		#mode,
+		#hint,
+		#stats,
+		#progressText,
+		#progressSubText {
+			margin-top: 15px;
+			font-size: 18px;
+			color: var(--text-color);
+		}
+
+		#progressSubText {
+			font-size: 14px;
+			color: var(--muted-color);
+			margin-top: 6px;
+		}
+
+		#stats {
+			margin-top: 20px;
+			max-width: 1000px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		#stats.hidden {
+			display: none;
+		}
+
+		#statsGrid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 24px;
+			align-items: start;
+			text-align: left;
+		}
+
+		#progressContainer {
+			width: 400px;
+			max-width: 90%;
+			height: 20px;
+			background: var(--progress-track);
+			border-radius: 10px;
+			margin: 15px auto;
+			overflow: hidden;
+		}
+
+		#progressBar {
+			height: 100%;
+			width: 0%;
+			background: var(--progress-fill);
+			transition: width 0.3s;
+		}
+
+		.stats-section {
+			background: var(--surface-color);
+			border: 1px solid var(--border-color);
+			border-radius: 8px;
+			padding: 16px;
+			box-sizing: border-box;
+			color: var(--text-color);
+		}
+
+		.stats-section h3 {
+			margin-top: 0;
+			margin-bottom: 12px;
+			font-size: 18px;
+		}
+
+		.stats-section div {
+			margin: 4px 0;
+			font-size: 15px;
+			line-height: 1.5;
+		}
+
+		#themeControls {
+			position: fixed;
+			top: 16px;
+			right: 16px;
+			display: flex;
+			gap: 8px;
+			align-items: center;
+			z-index: 1000;
+			background: var(--theme-panel-bg);
+			backdrop-filter: blur(6px);
+			padding: 8px 10px;
+			border-radius: 8px;
+			border: 1px solid var(--theme-panel-border);
+			box-shadow: 0 2px 8px var(--shadow-color);
+		}
+
+		#themeToggleBtn {
+			margin: 0;
+			padding: 8px 12px;
+			font-size: 14px;
+		}
+
+		#bgColorPicker {
+			width: 36px;
+			height: 36px;
+			padding: 0;
+			border: 1px solid var(--border-color);
+			background: none;
+			cursor: pointer;
+		}
+
+		footer {
+			margin-top: 50px;
+			padding: 20px 10px;
+			text-align: center;
+			font-size: 12px;
+			color: var(--muted-color);
+			border-top: 1px solid var(--border-color);
+			line-height: 1.8;
+		}
+
+		footer button {
+			border: none;
+			background: none;
+			color: var(--muted-color);
+			font-size: 12px;
+			cursor: pointer;
+			padding: 0;
+			margin-left: 4px;
+		}
+
+		@media (max-width: 700px) {
+			body {
+				padding: 80px 16px 24px;
+			}
+
+			#themeControls {
+				left: 16px;
+				right: 16px;
+				justify-content: center;
+			}
+
+			#statsGrid {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+
+<body class="light">
+	<div id="themeControls">
+		<button id="themeToggleBtn" onclick="toggleThemeMode()">🌗 다크 모드</button>
+		<input type="color" id="bgColorPicker" value="#f5f5f5" onchange="applyCustomBackground(this.value)"
+			title="배경색 선택">
+	</div>
+
+	<h1>🎵 듣기 시험 트레이너</h1>
+
+	<div>
+		<input type="file" id="playlistFile" accept=".js">
+		<button onclick="loadPlaylistFile()">플레이리스트 불러오기</button>
+	</div>
+
+	<div id="progressText">진행도: 0 / 0</div>
+	<div id="progressSubText">1회독 · 누적 0문제</div>
+	<div id="progressContainer">
+		<div id="progressBar"></div>
+	</div>
+
+	<iframe id="youtubePlayer" width="560" height="315" src="" frameborder="0" allow="autoplay"
+		allowfullscreen></iframe>
+	<audio id="audioPlayer"></audio>
+
+	<div style="margin: 10px 0;">
+		<button onclick="playCurrent()">▶ 재생</button>
+		<button onclick="pauseCurrent()">⏸ 정지</button>
+		<button onclick="restartCurrent()">↺ 처음부터</button>
+	</div>
+
+	<div>
+		<input id="composerAnswer" placeholder="작곡가 입력">
+	</div>
+
+	<div>
+		<input id="titleAnswer" placeholder="곡 제목 입력">
+	</div>
+
+	<div>
+		<button onclick="checkAnswer()">정답 확인</button>
+		<button id="nextSongBtn" onclick="nextSong()">다음 문제</button>
+		<button id="hintBtn" onclick="showHint()">힌트</button>
+		<button id="toggleStatsBtn" onclick="toggleStatsVisibility()">정답률 보기</button>
+
+		<button id="wrongNoteBtn" onclick="startWrongNoteMode()" style="display:none;">
+			전체 오답 다시
+		</button>
+
+		<button id="roundWrongNoteBtn" onclick="startRoundWrongNoteMode()" style="display:none;">
+			이번 회독 오답 다시
+		</button>
+
+		<button onclick="toggleExamMode()">모드 전환</button>
+	</div>
+
+	<p id="result"></p>
+	<p id="mode">현재 모드: 연습 모드</p>
+	<p id="hint"></p>
+	<div id="stats"></div>
+
+	<script>
+		let playlist = [];
+		let currentSong = null;
+
+		let currentPool = [];
+		let queue = [];
+
+		let examMode = false;
+		let examFinished = false;
+		let answered = false;
+
+		let totalSongs = 0;
+
+		// 전체 누적 통계
+		let stats = {};
+
+		// 이번 회독 통계
+		let roundStats = {};
+
+		// 전체 오답(현재 약점)
+		let wrongList = [];
+
+		// 이번 회독 오답
+		let roundWrongList = [];
+
+		// 진행도 관련
+		let solvedCount = 0;          // 시험 모드 진행도
+		let roundSolvedCount = 0;     // 연습 모드 이번 회독 진행도
+		let lifetimeSolvedCount = 0;  // 연습 모드 누적 풀이 수
+		let roundNumber = 1;
+
+		// 시험 점수
+		let examScore = 0;
+
+		let statsVisible = false;
+
+		let themeMode = "light";
+
+		/* ---------------- UI ---------------- */
+
+		function updateExamModeControls() {
+			const nextSongBtn = document.getElementById("nextSongBtn");
+			const hintBtn = document.getElementById("hintBtn");
+			const toggleStatsBtn = document.getElementById("toggleStatsBtn");
+			const statsEl = document.getElementById("stats");
+
+			if (examMode) {
+				nextSongBtn.style.display = "none";
+				hintBtn.style.display = "none";
+				toggleStatsBtn.style.display = "none";
+				statsVisible = false;
+				statsEl.classList.add("hidden");
+				toggleStatsBtn.innerText = "정답률 보기";
+				return;
+			}
+
+			nextSongBtn.style.display = "inline-block";
+			hintBtn.style.display = "inline-block";
+			toggleStatsBtn.style.display = "inline-block";
+		}
+
+		function updateWrongNoteButtons() {
+			updateExamModeControls();
+
+			const wrongBtn = document.getElementById("wrongNoteBtn");
+			const roundWrongBtn = document.getElementById("roundWrongNoteBtn");
+
+			if (examMode) {
+				// 시험 중에는 둘 다 숨김
+				if (!examFinished) {
+					wrongBtn.style.display = "none";
+					roundWrongBtn.style.display = "none";
+					return;
+				}
+
+				// 시험 끝난 후에는 이번 시험 오답만 다시 허용
+				wrongBtn.style.display = wrongList.length > 0 ? "inline-block" : "none";
+				roundWrongBtn.style.display = roundWrongList.length > 0 ? "inline-block" : "none";
+				return;
+			}
+
+			// 연습 모드
+			wrongBtn.style.display = wrongList.length > 0 ? "inline-block" : "none";
+			roundWrongBtn.style.display = roundWrongList.length > 0 ? "inline-block" : "none";
+		}
+
+		function toggleStatsVisibility() {
+			statsVisible = !statsVisible;
+
+			const statsEl = document.getElementById("stats");
+			const btn = document.getElementById("toggleStatsBtn");
+
+			if (statsVisible) {
+				statsEl.classList.remove("hidden");
+				btn.innerText = "정답률 가리기";
+			} else {
+				statsEl.classList.add("hidden");
+				btn.innerText = "정답률 보기";
+			}
+		}
+
+		/* ---------------- playlist ---------------- */
+
+		function initializeStats() {
+			stats = {};
+			roundStats = {};
+
+			playlist.forEach(song => {
+				stats[song.title] = { correct: 0, total: 0 };
+				roundStats[song.title] = { correct: 0, total: 0 };
+			});
+		}
+
+		function resetRoundStats() {
+			roundStats = {};
+			currentPool.forEach(song => {
+				roundStats[song.title] = { correct: 0, total: 0 };
+			});
+		}
+
+		function shuffle(array) {
+			return [...array].sort(() => Math.random() - 0.5);
+		}
+
+		function refillQueue() {
+			queue = shuffle(currentPool);
+		}
+
+		function loadPlaylistFile() {
+			const file = document.getElementById("playlistFile").files[0];
+			if (!file) {
+				alert("플레이리스트 파일을 선택하세요.");
+				return;
+			}
+
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				try {
+					eval(e.target.result);
+
+					currentPool = [...playlist];
+					totalSongs = currentPool.length;
+
+					wrongList = [];
+					roundWrongList = [];
+
+					examMode = false;
+					examFinished = false;
+					examScore = 0;
+
+					solvedCount = 0;
+					roundSolvedCount = 0;
+					lifetimeSolvedCount = 0;
+					roundNumber = 1;
+
+					initializeStats();
+					refillQueue();
+					nextSong();
+
+					statsVisible = false;
+					document.getElementById("stats").classList.add("hidden");
+					document.getElementById("toggleStatsBtn").innerText = "정답률 보기";
+
+					document.getElementById("mode").innerText = "현재 모드: 연습 모드";
+					updateWrongNoteButtons();
+
+					alert("플레이리스트 로드 완료!");
+				} catch (err) {
+					alert("파일 형식 오류: " + err.message);
+				}
+			};
+			reader.readAsText(file);
+		}
+
+		/* ---------------- scoring ---------------- */
+
+		function normalize(str) {
+			return str.toLowerCase().replace(/[^a-z0-9가-힣]/g, "");
+		}
+
+		function levenshtein(a, b) {
+			const matrix = [];
+			for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+			for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+			for (let i = 1; i <= b.length; i++) {
+				for (let j = 1; j <= a.length; j++) {
+					matrix[i][j] = b[i - 1] === a[j - 1]
+						? matrix[i - 1][j - 1]
+						: Math.min(
+							matrix[i - 1][j - 1] + 1,
+							matrix[i][j - 1] + 1,
+							matrix[i - 1][j] + 1
+						);
+				}
+			}
+			return matrix[b.length][a.length];
+		}
+
+		function similarity(a, b) {
+			a = normalize(a);
+			b = normalize(b);
+
+			const longer = a.length > b.length ? a : b;
+			const shorter = a.length > b.length ? b : a;
+
+			if (longer.length === 0) return 1;
+
+			return (longer.length - levenshtein(longer, shorter)) / longer.length;
+		}
+
+		function extractMarkedNumbers(str) {
+			const text = str.toLowerCase();
+			const patterns = [
+				/(?:제\s*)?(\d+)\s*(?:번|악장|곡)/g,
+				/(?:no\.?|number|movement|mov\.?|mvt\.?)\s*(\d+)/g,
+				/(\d+)\s*(?:st|nd|rd|th)\s*(?:movement|mov\.?|mvt\.?)?/g
+			];
+			const numbers = [];
+
+			patterns.forEach(pattern => {
+				let match;
+				while ((match = pattern.exec(text)) !== null) {
+					numbers.push(String(Number(match[1])));
+				}
+			});
+
+			return numbers;
+		}
+
+		function extractAllNumbers(str) {
+			return (str.match(/\d+/g) || []).map(number => String(Number(number)));
+		}
+
+		function numbersEqual(a, b) {
+			return a.length === b.length && a.every((number, index) => number === b[index]);
+		}
+
+		function titleNumbersMatch(input, candidates) {
+			const expectedNumberSets = candidates
+				.map(candidate => extractMarkedNumbers(candidate))
+				.filter(numbers => numbers.length > 0);
+
+			if (expectedNumberSets.length === 0) return true;
+
+			const inputNumbers = extractMarkedNumbers(input);
+			const comparableInputNumbers = inputNumbers.length > 0 ? inputNumbers : extractAllNumbers(input);
+
+			return expectedNumberSets.some(expectedNumbers => numbersEqual(comparableInputNumbers, expectedNumbers));
+		}
+
+		function getTitleScore(input, song) {
+			const candidates = [song.title, ...(song.aliases || [])];
+
+			if (!titleNumbersMatch(input, candidates)) return 0;
+
+			return Math.max(...candidates.map(candidate => similarity(input, candidate)));
+		}
+
+		/* ---------------- game ---------------- */
+
+		function loadSong() {
+			if (queue.length === 0) return;
+
+			answered = false;
+			currentSong = queue.pop();
+
+			const youtubePlayer = document.getElementById("youtubePlayer");
+			const audioPlayer = document.getElementById("audioPlayer");
+
+			youtubePlayer.style.display = "none";
+			audioPlayer.style.display = "none";
+
+			if (currentSong.youtube) {
+				youtubePlayer.style.display = "block";
+				youtubePlayer.src = `${currentSong.youtube}?start=${currentSong.start || 0}&autoplay=1&rel=0`;
+			} else if (currentSong.file) {
+				audioPlayer.style.display = "block";
+				audioPlayer.src = currentSong.file;
+
+				audioPlayer.onloadedmetadata = () => {
+					audioPlayer.currentTime = currentSong.start || 0;
+					audioPlayer.play();
+
+					clearTimeout(window.stopTimer);
+					if (currentSong.end) {
+						window.stopTimer = setTimeout(() => {
+							audioPlayer.pause();
+						}, (currentSong.end - currentSong.start) * 1000);
+					}
+				};
+			}
+
+			document.getElementById("composerAnswer").value = "";
+			document.getElementById("titleAnswer").value = "";
+			document.getElementById("result").innerText = "";
+			document.getElementById("hint").innerText = "";
+
+			updateProgress();
+			updateStats();
+			updateWrongNoteButtons();
+		}
+
+		function nextSong() {
+			if (examFinished) return;
+
+			const audio = document.getElementById("audioPlayer");
+			audio.pause();
+			audio.currentTime = 0;
+
+			if (queue.length === 0) {
+				if (examMode) {
+					return;
+				} else {
+					roundNumber++;
+					roundSolvedCount = 0;
+					roundWrongList = [];
+					resetRoundStats();
+					refillQueue();
+					document.getElementById("result").innerText = `${roundNumber - 1}회독 완료! 새 라운드를 시작합니다.`;
+				}
+			}
+
+			loadSong();
+		}
+
+		/* ---------------- exam ---------------- */
+
+		function finishExam() {
+			examFinished = true;
+
+			const rate = Math.round((examScore / totalSongs) * 100);
+			let message = `시험 종료! 점수: ${examScore}/${totalSongs} (${rate}%)`;
+
+			if (roundWrongList.length > 0) {
+				message += "\n\n틀린 곡:";
+				roundWrongList.forEach(song => {
+					message += `\n- ${song.title}`;
+				});
+			} else {
+				message += "\n\n전곡 정답!";
+			}
+
+			document.getElementById("result").innerText = message;
+			document.getElementById("mode").innerText = "현재 모드: 시험 종료";
+
+			updateWrongNoteButtons();
+		}
+
+		function toggleExamMode() {
+			examMode = !examMode;
+			examFinished = false;
+
+			currentPool = [...playlist];
+			totalSongs = currentPool.length;
+
+			queue = [];
+			refillQueue();
+
+			// 시험/연습 상태 초기화
+			solvedCount = 0;
+			roundSolvedCount = 0;
+			examScore = 0;
+			roundNumber = 1;
+			lifetimeSolvedCount = 0;
+
+			roundWrongList = [];
+			resetRoundStats();
+
+			document.getElementById("mode").innerText =
+				examMode ? "현재 모드: 시험 모드" : "현재 모드: 연습 모드";
+
+			statsVisible = false;
+			document.getElementById("stats").classList.add("hidden");
+			document.getElementById("toggleStatsBtn").innerText = "정답률 보기";
+
+			updateWrongNoteButtons();
+			nextSong();
+		}
+
+		function checkAnswer() {
+			if (answered || examFinished) return;
+
+			const composerInput = document.getElementById("composerAnswer").value.trim();
+			const titleInput = document.getElementById("titleAnswer").value.trim();
+
+			if (!composerInput || !titleInput) {
+				document.getElementById("result").innerText = "작곡가와 제목을 모두 입력하세요.";
+				return;
+			}
+
+			answered = true;
+
+			const composerScore = similarity(composerInput, currentSong.composer);
+			const titleScore = getTitleScore(titleInput, currentSong);
+
+			// 전체 누적 통계
+			stats[currentSong.title].total++;
+
+			// 이번 회독 통계
+			if (roundStats[currentSong.title]) {
+				roundStats[currentSong.title].total++;
+			}
+
+			const isCorrect = composerScore >= 0.7 && titleScore >= 0.7;
+			const exactAnswer = `정답: ${currentSong.composer} - ${currentSong.title}`;
+
+			if (isCorrect) {
+				stats[currentSong.title].correct++;
+				if (roundStats[currentSong.title]) {
+					roundStats[currentSong.title].correct++;
+				}
+
+				if (examMode) examScore++;
+
+				document.getElementById("result").innerText = `✅ 정답!\n${exactAnswer}`;
+
+				// 전체 약점 목록에서 제거
+				wrongList = wrongList.filter(s => s !== currentSong);
+
+				// 이번 회독 오답에서도 제거
+				roundWrongList = roundWrongList.filter(s => s !== currentSong);
+			} else {
+				if (!wrongList.includes(currentSong)) wrongList.push(currentSong);
+				if (!roundWrongList.includes(currentSong)) roundWrongList.push(currentSong);
+
+				document.getElementById("result").innerText = `❌ 오답!\n${exactAnswer}`;
+			}
+
+			if (examMode) {
+				solvedCount++;
+			} else {
+				roundSolvedCount++;
+				lifetimeSolvedCount++;
+			}
+
+			updateProgress();
+			updateStats();
+			updateWrongNoteButtons();
+
+			if (examMode && solvedCount >= totalSongs) {
+				setTimeout(finishExam, 1000);
+			} else {
+				setTimeout(nextSong, 1000);
+			}
+		}
+
+		/* ---------------- misc ---------------- */
+
+		function startWrongNoteMode() {
+			examMode = false;
+			examFinished = false;
+
+			currentPool = [...wrongList];
+			totalSongs = currentPool.length;
+
+			queue = [];
+			refillQueue();
+
+			roundSolvedCount = 0;
+			roundNumber = 1;
+			lifetimeSolvedCount = 0;
+			roundWrongList = [];
+			resetRoundStats();
+
+			document.getElementById("mode").innerText = "현재 모드: 이번 회독 오답 복습";
+
+			statsVisible = false;
+			document.getElementById("stats").classList.add("hidden");
+			document.getElementById("toggleStatsBtn").innerText = "정답률 보기";
+
+			updateWrongNoteButtons();
+			nextSong();
+		}
+
+		function startRoundWrongNoteMode() {
+			examMode = false;
+			examFinished = false;
+
+			currentPool = [...roundWrongList];
+			totalSongs = currentPool.length;
+
+			queue = [];
+			refillQueue();
+
+			roundSolvedCount = 0;
+			roundNumber = 1;
+			lifetimeSolvedCount = 0;
+			resetRoundStats();
+
+			document.getElementById("mode").innerText = "현재 모드: 이번 회독 오답 복습";
+
+			updateWrongNoteButtons();
+			nextSong();
+		}
+
+		function updateProgress() {
+			let displaySolved = 0;
+			let displayTotal = totalSongs;
+			let percent = 0;
+
+			if (examMode) {
+				displaySolved = solvedCount;
+				percent = totalSongs ? (solvedCount / totalSongs) * 100 : 0;
+
+				document.getElementById("progressSubText").innerText =
+					`시험 진행 중 · 점수 ${examScore}/${Math.max(solvedCount, 1)}`;
+			} else {
+				displaySolved = roundSolvedCount;
+				percent = totalSongs ? (roundSolvedCount / totalSongs) * 100 : 0;
+
+				document.getElementById("progressSubText").innerText =
+					`${roundNumber}회독 · 누적 ${lifetimeSolvedCount}문제`;
+			}
+
+			document.getElementById("progressText").innerText =
+				`진행도: ${displaySolved} / ${displayTotal}`;
+
+			document.getElementById("progressBar").style.width = `${Math.min(percent, 100)}%`;
+		}
+
+		function playCurrent() {
+			document.getElementById("audioPlayer").play();
+		}
+
+		function pauseCurrent() {
+			document.getElementById("audioPlayer").pause();
+		}
+
+		function restartCurrent() {
+			const audio = document.getElementById("audioPlayer");
+			audio.currentTime = currentSong.start || 0;
+			audio.play();
+		}
+
+		function showHint() {
+			if (examMode) return;
+
+			document.getElementById("hint").innerText =
+				`힌트: 작곡가 ${currentSong.composer[0]}..., 제목 글자 수 ${currentSong.title.length}`;
+		}
+
+		function renderStatsSection(title, targetStats) {
+			let html = `<div class="stats-section"><h3>${title}</h3>`;
+
+			for (const songTitle in targetStats) {
+				const s = targetStats[songTitle];
+				const rate = s.total ? Math.round((s.correct / s.total) * 100) : 0;
+				html += `<div>${songTitle}: ${rate}% (${s.correct}/${s.total})</div>`;
+			}
+
+			html += `</div>`;
+			return html;
+		}
+
+		function updateStats() {
+			const roundHtml = renderStatsSection("🌀 이번 회독 통계", roundStats);
+			const totalHtml = renderStatsSection("📊 전체 누적 통계", stats);
+
+			document.getElementById("stats").innerHTML = `
+        <div id="statsGrid">
+            ${roundHtml}
+            ${totalHtml}
+        </div>
+    `;
+
+			if (statsVisible) {
+				document.getElementById("stats").classList.remove("hidden");
+			} else {
+				document.getElementById("stats").classList.add("hidden");
+			}
+		}
+
+		document.getElementById("titleAnswer").addEventListener("keydown", (e) => {
+			if (e.key === "Enter") checkAnswer();
+		});
+
+		function setThemeButtonText() {
+			const btn = document.getElementById("themeToggleBtn");
+			btn.innerText = themeMode === "light" ? "🌗 다크 모드" : "🌞 라이트 모드";
+		}
+
+		function setThemeVariables(theme) {
+			const isDark = theme === "dark";
+			const root = document.documentElement;
+
+			root.style.setProperty("--page-bg", isDark ? "#121212" : "#f5f5f5");
+			root.style.setProperty("--text-color", isDark ? "#eeeeee" : "#111111");
+			root.style.setProperty("--muted-color", isDark ? "rgba(255,255,255,0.68)" : "rgba(0,0,0,0.58)");
+			root.style.setProperty("--border-color", isDark ? "rgba(255,255,255,0.18)" : "rgba(0,0,0,0.14)");
+			root.style.setProperty("--surface-color", isDark ? "#1e1e1e" : "#ffffff");
+			root.style.setProperty("--control-bg", isDark ? "#1e1e1e" : "#ffffff");
+			root.style.setProperty("--control-text", isDark ? "#eeeeee" : "#111111");
+			root.style.setProperty("--progress-track", isDark ? "#333333" : "#dddddd");
+			root.style.setProperty("--progress-fill", isDark ? "#81c784" : "#4caf50");
+			root.style.setProperty("--theme-panel-bg", isDark ? "rgba(30,30,30,0.78)" : "rgba(255,255,255,0.78)");
+			root.style.setProperty("--theme-panel-border", isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)");
+			root.style.setProperty("--shadow-color", isDark ? "rgba(0,0,0,0.28)" : "rgba(0,0,0,0.08)");
+		}
+
+		function hexToRgb(hex) {
+			const normalized = hex.replace("#", "");
+			const value = parseInt(normalized, 16);
+
+			return {
+				r: (value >> 16) & 255,
+				g: (value >> 8) & 255,
+				b: value & 255
+			};
+		}
+
+		function getRelativeLuminance({ r, g, b }) {
+			const toLinear = (channel) => {
+				const value = channel / 255;
+				return value <= 0.03928
+					? value / 12.92
+					: Math.pow((value + 0.055) / 1.055, 2.4);
+			};
+
+			return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+		}
+
+		function mixColor({ r, g, b }, target, amount) {
+			return {
+				r: Math.round(r + (target.r - r) * amount),
+				g: Math.round(g + (target.g - g) * amount),
+				b: Math.round(b + (target.b - b) * amount)
+			};
+		}
+
+		function rgbToHex({ r, g, b }) {
+			return `#${[r, g, b].map(value => value.toString(16).padStart(2, "0")).join("")}`;
+		}
+
+		function applyReadableThemeFromBackground(color) {
+			const rgb = hexToRgb(color);
+			const luminance = getRelativeLuminance(rgb);
+			const isLight = luminance > 0.45;
+			const root = document.documentElement;
+			const surface = mixColor(rgb, isLight ? { r: 255, g: 255, b: 255 } : { r: 0, g: 0, b: 0 }, 0.78);
+
+			root.style.setProperty("--page-bg", color);
+			root.style.setProperty("--text-color", isLight ? "#111111" : "#f5f5f5");
+			root.style.setProperty("--muted-color", isLight ? "rgba(0,0,0,0.62)" : "rgba(255,255,255,0.72)");
+			root.style.setProperty("--border-color", isLight ? "rgba(0,0,0,0.16)" : "rgba(255,255,255,0.2)");
+			root.style.setProperty("--surface-color", rgbToHex(surface));
+			root.style.setProperty("--control-bg", isLight ? "rgba(255,255,255,0.9)" : "rgba(20,20,20,0.88)");
+			root.style.setProperty("--control-text", isLight ? "#111111" : "#eeeeee");
+			root.style.setProperty("--progress-track", isLight ? "rgba(0,0,0,0.16)" : "rgba(255,255,255,0.22)");
+			root.style.setProperty("--progress-fill", isLight ? "#2f8f46" : "#81c784");
+			root.style.setProperty("--theme-panel-bg", isLight ? "rgba(255,255,255,0.78)" : "rgba(20,20,20,0.78)");
+			root.style.setProperty("--theme-panel-border", isLight ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.14)");
+			root.style.setProperty("--shadow-color", isLight ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.3)");
+		}
+
+		function toggleThemeMode() {
+			if (themeMode === "light") {
+				themeMode = "dark";
+			} else {
+				themeMode = "light";
+			}
+
+			document.body.classList.remove("light", "dark");
+			document.body.classList.add(themeMode);
+			localStorage.setItem("themeMode", themeMode);
+			localStorage.removeItem("customBgColor");
+
+			setThemeVariables(themeMode);
+			setThemeButtonText();
+			document.getElementById("bgColorPicker").value = themeMode === "light" ? "#f5f5f5" : "#121212";
+		}
+
+		function applyCustomBackground(color) {
+			applyReadableThemeFromBackground(color);
+			localStorage.setItem("customBgColor", color);
+			document.getElementById("bgColorPicker").value = color;
+		}
+
+		function initializeTheme() {
+			const savedMode = localStorage.getItem("themeMode") || "light";
+			const savedColor = localStorage.getItem("customBgColor");
+
+			themeMode = savedMode;
+
+			document.body.classList.remove("light", "dark");
+			document.body.classList.add(themeMode);
+			setThemeVariables(themeMode);
+			setThemeButtonText();
+
+			if (savedColor) {
+				applyReadableThemeFromBackground(savedColor);
+				document.getElementById("bgColorPicker").value = savedColor;
+			}
+		}
+		initializeTheme();
+
+		function secretMessage() {
+			alert("하지만 너무 퍼지지는 않았으면 좋겠어요. 다 공부를 쉽게 해버리면 평균이 올라가고 이 웹앱의 가치가 떨어지니까...");
+		}
+	</script>
+
+	<footer>
+		<div>© 2026 서울대학교 vyurihwa</div>
+		<div>무단 복제 및 재배포를 허용하고 멋대로 뚝스딱스 고쳐쓰시는 건 더 멋진 선택입니다</div>
+		<div>작곡/음악학과 내 전래를 적극 권장합니다... 30년 후쯤에 이걸 썼다는 사람들이 속출하면 재밌겠다
+			<button onclick="secretMessage()">?</button>
+		</div>
+		<div>아 상업적 사용 안 됩니다. 왜냐하면 만들기 어려운 건 아니지만 내가 배 아프잖아...</div>
+		<div>서양음악사 시험 공부하기 귀찮아서 만들었습니다 음악학과(&복부전생) 화이팅~</div>
+		<div>이방인과 소외된 이들에게는 무조건적 환대를 해주시길...</div>
+		<div>🌈 🩷 🎛️ ✊</div>
+	</footer>
+</body>
+
+</html>
