@@ -1,4 +1,4 @@
-# 🎵 Listening Exam Trainer - 듣기 시험 트레이너
+# 🎵 Music Listening Test Trainer - 듣기 시험 트레이너
 
 서양음악사 시험 공부하기 귀찮아서 만든
 **듣기 시험 연습용 웹앱**
