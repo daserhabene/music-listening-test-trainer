@@ -20,8 +20,8 @@ playlist = [
     title: "머리 미사곡 아뉴스데이",
     aliases: ["Missa Caput", "미사 카푸트", "카푸트 미사", "Caput", "아뉴스데이", "Agnus Dei"],
     file: "audio/musichistory1_final/Ockeghem_Missa_Caput.mp3",
-    start: 0,
-    end: 60
+    start: 1878,
+    end: 1938
   },
   {
     composer: "조스캥",
