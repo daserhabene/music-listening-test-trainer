@@ -177,7 +177,7 @@ playlist = [
 
 ## 라이선스
 
-© 2026 서울대학교 vyurihwa
+© 2026 서울대학교 vyuryhwa
 
 이 프로그램은:
 

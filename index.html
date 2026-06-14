@@ -49,6 +49,21 @@
 			box-sizing: border-box;
 		}
 
+		textarea {
+			width: 560px;
+			max-width: 90%;
+			min-height: 92px;
+			padding: 12px;
+			font-size: 15px;
+			line-height: 1.5;
+			background: var(--control-bg);
+			color: var(--control-text);
+			border: 1px solid var(--border-color);
+			border-radius: 6px;
+			box-sizing: border-box;
+			resize: vertical;
+		}
+
 		button {
 			padding: 10px 20px;
 			margin: 5px;
@@ -60,12 +75,60 @@
 			border-radius: 6px;
 		}
 
+		.control-row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			justify-content: center;
+			align-items: center;
+			margin: 12px auto;
+			max-width: 900px;
+		}
+
+		.control-row button,
+		.control-row input {
+			margin: 0;
+		}
+
+		.mode-row {
+			position: sticky;
+			top: 16px;
+			z-index: 900;
+			width: fit-content;
+			max-width: calc(100% - 32px);
+			padding: 8px;
+			background: var(--theme-panel-bg);
+			border: 1px solid var(--theme-panel-border);
+			border-radius: 8px;
+			box-shadow: 0 2px 8px var(--shadow-color);
+			backdrop-filter: blur(6px);
+		}
+
+		.mode-row button,
+		.study-row button {
+			font-weight: 700;
+		}
+
+		.mode-row button.active {
+			background: var(--progress-fill);
+			border-color: var(--progress-fill);
+			color: #ffffff;
+		}
+
+		.review-row {
+			margin-top: 4px;
+		}
+
+		.review-row button {
+			font-size: 14px;
+			padding: 8px 14px;
+		}
+
 		input::placeholder {
 			color: var(--muted-color);
 		}
 
 		#result,
-		#mode,
 		#hint,
 		#stats,
 		#progressText,
@@ -189,6 +252,211 @@
 			margin-left: 4px;
 		}
 
+		footer details {
+			margin-top: 8px;
+		}
+
+		footer summary {
+			cursor: pointer;
+			display: inline-block;
+			color: var(--muted-color);
+		}
+
+		footer summary:hover {
+			text-decoration: underline;
+		}
+
+		#songMemoPanel {
+			position: fixed;
+			top: 170px;
+			right: 16px;
+			z-index: 850;
+			width: 320px;
+			min-width: 260px;
+			min-height: 230px;
+			max-width: calc(100% - 32px);
+			overflow: auto;
+			resize: both;
+			background: var(--theme-panel-bg);
+			border: 1px solid var(--theme-panel-border);
+			border-radius: 8px;
+			box-shadow: 0 2px 8px var(--shadow-color);
+			backdrop-filter: blur(6px);
+			text-align: left;
+		}
+
+		.memo-panel-body {
+			padding: 12px 14px 14px;
+		}
+
+		.memo-panel-header,
+		.memo-list-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 12px;
+			padding: 12px 14px;
+			border-bottom: 1px solid var(--border-color);
+			cursor: move;
+			user-select: none;
+		}
+
+		.memo-panel-header h2,
+		.memo-list-header h2 {
+			margin: 0;
+			font-size: 16px;
+		}
+
+		.memo-panel-header button,
+		.memo-list-header button {
+			margin: 0;
+			padding: 6px 10px;
+			font-size: 13px;
+			cursor: pointer;
+		}
+
+		#songMemoPanel label {
+			display: block;
+			width: auto;
+			max-width: none;
+			margin: 0 0 8px;
+			color: var(--muted-color);
+			font-size: 14px;
+		}
+
+		#songMemoPanel textarea {
+			width: 100%;
+			max-width: none;
+			min-height: 140px;
+		}
+
+		#songMemoStatus {
+			width: auto;
+			max-width: none;
+			margin: 6px 0 0;
+			color: var(--muted-color);
+			font-size: 12px;
+			text-align: right;
+		}
+
+		#memoListPanel {
+			position: fixed;
+			top: 120px;
+			right: 16px;
+			z-index: 920;
+			width: 420px;
+			height: min(70vh, 640px);
+			min-width: 320px;
+			min-height: 260px;
+			max-width: calc(100% - 32px);
+			overflow: hidden;
+			resize: both;
+			background: var(--surface-color);
+			border: 1px solid var(--border-color);
+			border-radius: 8px;
+			box-shadow: 0 4px 18px var(--shadow-color);
+			color: var(--text-color);
+			text-align: left;
+		}
+
+		#memoListPanel.hidden,
+		#songMemoPanel.hidden {
+			display: none;
+		}
+
+		#memoListContent {
+			height: calc(100% - 53px);
+			overflow: auto;
+			padding: 12px 14px 16px;
+		}
+
+		.memo-list-item {
+			padding: 12px 0;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.memo-list-item:last-child {
+			border-bottom: none;
+		}
+
+		.memo-list-title {
+			font-size: 14px;
+			font-weight: 700;
+			margin-bottom: 4px;
+		}
+
+		.memo-list-subtitle {
+			font-size: 12px;
+			color: var(--muted-color);
+			margin-bottom: 8px;
+		}
+
+		.memo-list-item textarea {
+			width: 100%;
+			max-width: none;
+			min-height: 74px;
+			font-size: 14px;
+		}
+
+		#developerMessageToggle {
+			position: fixed;
+			right: 16px;
+			bottom: 16px;
+			z-index: 1000;
+			text-align: right;
+			background: var(--theme-panel-bg);
+			border: 1px solid var(--theme-panel-border);
+			border-radius: 8px;
+			box-shadow: 0 2px 8px var(--shadow-color);
+			backdrop-filter: blur(6px);
+			padding: 8px 10px;
+			max-width: min(420px, calc(100% - 32px));
+		}
+
+		#developerMessageToggle[open] {
+			text-align: left;
+			width: 360px;
+		}
+
+		#developerMessageToggle summary {
+			cursor: pointer;
+			list-style: none;
+			color: var(--muted-color);
+			font-size: 12px;
+		}
+
+		#developerMessageToggle summary::-webkit-details-marker {
+			display: none;
+		}
+
+		#developerMessageToggle summary:hover {
+			text-decoration: underline;
+		}
+
+		.developer-message-body {
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px solid var(--theme-panel-border);
+			color: var(--text-color);
+			font-size: 13px;
+			line-height: 1.6;
+		}
+
+		.developer-message-body div {
+			margin: 6px 0;
+		}
+
+		.developer-message-body button {
+			border: 1px solid var(--border-color);
+			background: var(--control-bg);
+			color: var(--control-text);
+			border-radius: 999px;
+			font-size: 11px;
+			line-height: 1;
+			padding: 2px 7px;
+			margin-left: 4px;
+		}
+
 		@media (max-width: 700px) {
 			body {
 				padding: 80px 16px 24px;
@@ -200,8 +468,25 @@
 				justify-content: center;
 			}
 
+			.mode-row {
+				top: 72px;
+			}
+
 			#statsGrid {
 				grid-template-columns: 1fr;
+			}
+
+			#songMemoPanel,
+			#memoListPanel {
+				position: static;
+				width: auto;
+				max-width: 100%;
+				margin: 12px auto;
+				resize: vertical;
+			}
+
+			#memoListPanel {
+				max-height: 70vh;
 			}
 		}
 	</style>
@@ -216,9 +501,15 @@
 
 	<h1>🎵 듣기 시험 트레이너</h1>
 
-	<div>
+	<div class="control-row">
 		<input type="file" id="playlistFile" accept=".js">
 		<button onclick="loadPlaylistFile()">플레이리스트 불러오기</button>
+	</div>
+
+	<div id="modeControls" class="control-row mode-row">
+		<button id="practiceModeBtn" onclick="startPracticeMode()">연습 모드</button>
+		<button id="studyModeBtn" onclick="startStudyMode()">학습 모드</button>
+		<button id="examModeBtn" onclick="startExamMode()">시험 모드</button>
 	</div>
 
 	<div id="progressText">진행도: 0 / 0</div>
@@ -231,10 +522,32 @@
 		allowfullscreen></iframe>
 	<audio id="audioPlayer"></audio>
 
-	<div style="margin: 10px 0;">
+	<div class="control-row">
 		<button onclick="playCurrent()">▶ 재생</button>
 		<button onclick="pauseCurrent()">⏸ 정지</button>
 		<button onclick="restartCurrent()">↺ 처음부터</button>
+		<button id="toggleMemoBtn" onclick="toggleSongMemo()">메모하기</button>
+		<button id="showMemoListBtn" onclick="toggleMemoList()">전체 메모 보기</button>
+	</div>
+
+	<div id="songMemoPanel" class="hidden">
+		<div class="memo-panel-header">
+			<h2>메모하기</h2>
+			<button onclick="toggleSongMemo()">닫기</button>
+		</div>
+		<div class="memo-panel-body">
+			<label for="songMemo">암기 메모</label>
+			<textarea id="songMemo" placeholder="이 곡을 구분하는 포인트를 적어두세요." oninput="saveSongMemo()"></textarea>
+			<div id="songMemoStatus">플레이리스트를 불러오면 곡별로 자동 저장됩니다.</div>
+		</div>
+	</div>
+
+	<div id="memoListPanel" class="hidden">
+		<div class="memo-list-header">
+			<h2>전체 메모 보기</h2>
+			<button onclick="toggleMemoList()">닫기</button>
+		</div>
+		<div id="memoListContent"></div>
 	</div>
 
 	<div>
@@ -245,12 +558,20 @@
 		<input id="titleAnswer" placeholder="곡 제목 입력">
 	</div>
 
-	<div>
-		<button onclick="checkAnswer()">정답 확인</button>
+	<div class="control-row">
+		<button id="checkAnswerBtn" onclick="checkAnswer()">정답 확인</button>
 		<button id="nextSongBtn" onclick="nextSong()">다음 문제</button>
 		<button id="hintBtn" onclick="showHint()">힌트</button>
 		<button id="toggleStatsBtn" onclick="toggleStatsVisibility()">정답률 보기</button>
+	</div>
 
+	<div class="control-row study-row">
+		<button id="showStudyAnswerBtn" onclick="showStudyAnswer()" style="display:none;">정답 보기</button>
+		<button id="studyKnownBtn" onclick="markStudyResult(true)" style="display:none;">아는 곡</button>
+		<button id="studyUnknownBtn" onclick="markStudyResult(false)" style="display:none;">모르는 곡</button>
+	</div>
+
+	<div class="control-row review-row">
 		<button id="wrongNoteBtn" onclick="startWrongNoteMode()" style="display:none;">
 			전체 오답 다시
 		</button>
@@ -258,12 +579,10 @@
 		<button id="roundWrongNoteBtn" onclick="startRoundWrongNoteMode()" style="display:none;">
 			이번 회독 오답 다시
 		</button>
-
-		<button onclick="toggleExamMode()">모드 전환</button>
 	</div>
 
 	<p id="result"></p>
-	<p id="mode">현재 모드: 연습 모드</p>
+	<p id="mode" hidden></p>
 	<p id="hint"></p>
 	<div id="stats"></div>
 
@@ -274,8 +593,25 @@
 		let currentPool = [];
 		let queue = [];
 
-		let examMode = false;
-		let examFinished = false;
+		const MODES = {
+			PRACTICE: "practice",
+			STUDY: "study",
+			EXAM: "exam",
+			EXAM_FINISHED: "examFinished",
+			WRONG_ALL: "wrongAll",
+			WRONG_ROUND: "wrongRound"
+		};
+
+		const MODE_LABELS = {
+			[MODES.PRACTICE]: "연습 모드",
+			[MODES.STUDY]: "학습 모드",
+			[MODES.EXAM]: "시험 모드",
+			[MODES.EXAM_FINISHED]: "시험 종료",
+			[MODES.WRONG_ALL]: "전체 오답 복습",
+			[MODES.WRONG_ROUND]: "이번 회독 오답 복습"
+		};
+
+		let appMode = MODES.PRACTICE;
 		let answered = false;
 
 		let totalSongs = 0;
@@ -301,56 +637,114 @@
 		// 시험 점수
 		let examScore = 0;
 
+		let studyKnownCount = 0;
+		let studyUnknownCount = 0;
+		let studyAnswerRevealed = false;
+
 		let statsVisible = false;
+		let memoPanelVisible = false;
+		let memoListVisible = false;
 
 		let themeMode = "light";
+		const MEMO_STORAGE_KEY = "musicTrainerSongMemos";
 
 		/* ---------------- UI ---------------- */
 
-		function updateExamModeControls() {
+		function isExamMode() {
+			return appMode === MODES.EXAM;
+		}
+
+		function isStudyMode() {
+			return appMode === MODES.STUDY;
+		}
+
+		function isFinishedMode() {
+			return appMode === MODES.EXAM_FINISHED;
+		}
+
+		function isPracticeLikeMode() {
+			return [MODES.PRACTICE, MODES.WRONG_ALL, MODES.WRONG_ROUND].includes(appMode);
+		}
+
+		function updateModeText() {
+			document.getElementById("mode").innerText = `현재 모드: ${MODE_LABELS[appMode]}`;
+		}
+
+		function updateModeButtons() {
+			document.getElementById("practiceModeBtn").classList.toggle("active", appMode === MODES.PRACTICE);
+			document.getElementById("studyModeBtn").classList.toggle("active", appMode === MODES.STUDY);
+			document.getElementById("examModeBtn").classList.toggle("active", isExamMode() || isFinishedMode());
+		}
+
+		function hideStats() {
+			statsVisible = false;
+			document.getElementById("stats").classList.add("hidden");
+			document.getElementById("toggleStatsBtn").innerText = "정답률 보기";
+		}
+
+		function updateModeControls() {
+			const checkAnswerBtn = document.getElementById("checkAnswerBtn");
 			const nextSongBtn = document.getElementById("nextSongBtn");
 			const hintBtn = document.getElementById("hintBtn");
 			const toggleStatsBtn = document.getElementById("toggleStatsBtn");
 			const statsEl = document.getElementById("stats");
+			const composerAnswer = document.getElementById("composerAnswer");
+			const titleAnswer = document.getElementById("titleAnswer");
+			const showStudyAnswerBtn = document.getElementById("showStudyAnswerBtn");
+			const studyKnownBtn = document.getElementById("studyKnownBtn");
+			const studyUnknownBtn = document.getElementById("studyUnknownBtn");
+			const wrongBtn = document.getElementById("wrongNoteBtn");
+			const roundWrongBtn = document.getElementById("roundWrongNoteBtn");
+			const toggleMemoBtn = document.getElementById("toggleMemoBtn");
+			const showMemoListBtn = document.getElementById("showMemoListBtn");
+			const songMemoPanel = document.getElementById("songMemoPanel");
+			const memoListPanel = document.getElementById("memoListPanel");
 
-			if (examMode) {
-				nextSongBtn.style.display = "none";
-				hintBtn.style.display = "none";
-				toggleStatsBtn.style.display = "none";
+			const shouldShowInputs = isPracticeLikeMode() || isExamMode();
+			const shouldShowStudyButtons = isStudyMode();
+			const canUseStats = !isExamMode() && !isFinishedMode();
+			const canUseMemo = !isExamMode() && !isFinishedMode();
+
+			updateModeButtons();
+
+			composerAnswer.style.display = shouldShowInputs ? "inline-block" : "none";
+			titleAnswer.style.display = shouldShowInputs ? "inline-block" : "none";
+
+			checkAnswerBtn.style.display = shouldShowInputs && !isFinishedMode() ? "inline-block" : "none";
+			nextSongBtn.style.display = isExamMode() || isFinishedMode() || isStudyMode() ? "none" : "inline-block";
+			hintBtn.style.display = isPracticeLikeMode() ? "inline-block" : "none";
+			toggleStatsBtn.style.display = canUseStats ? "inline-block" : "none";
+			toggleMemoBtn.style.display = canUseMemo ? "inline-block" : "none";
+			showMemoListBtn.style.display = canUseMemo ? "inline-block" : "none";
+			toggleMemoBtn.innerText = memoPanelVisible ? "메모 닫기" : "메모하기";
+			showMemoListBtn.innerText = memoListVisible ? "전체 메모 닫기" : "전체 메모 보기";
+
+			showStudyAnswerBtn.style.display = shouldShowStudyButtons && !answered && !studyAnswerRevealed ? "inline-block" : "none";
+			studyKnownBtn.style.display = shouldShowStudyButtons && !answered ? "inline-block" : "none";
+			studyUnknownBtn.style.display = shouldShowStudyButtons && !answered ? "inline-block" : "none";
+
+			if (!canUseStats) {
 				statsVisible = false;
 				statsEl.classList.add("hidden");
 				toggleStatsBtn.innerText = "정답률 보기";
-				return;
 			}
 
-			nextSongBtn.style.display = "inline-block";
-			hintBtn.style.display = "inline-block";
-			toggleStatsBtn.style.display = "inline-block";
-		}
+			if (!canUseMemo) {
+				memoPanelVisible = false;
+				memoListVisible = false;
+			}
 
-		function updateWrongNoteButtons() {
-			updateExamModeControls();
+			songMemoPanel.classList.toggle("hidden", !memoPanelVisible || !canUseMemo);
+			memoListPanel.classList.toggle("hidden", !memoListVisible || !canUseMemo);
 
-			const wrongBtn = document.getElementById("wrongNoteBtn");
-			const roundWrongBtn = document.getElementById("roundWrongNoteBtn");
-
-			if (examMode) {
-				// 시험 중에는 둘 다 숨김
-				if (!examFinished) {
-					wrongBtn.style.display = "none";
-					roundWrongBtn.style.display = "none";
-					return;
-				}
-
-				// 시험 끝난 후에는 이번 시험 오답만 다시 허용
+			if (isFinishedMode()) {
 				wrongBtn.style.display = wrongList.length > 0 ? "inline-block" : "none";
 				roundWrongBtn.style.display = roundWrongList.length > 0 ? "inline-block" : "none";
 				return;
 			}
 
-			// 연습 모드
-			wrongBtn.style.display = wrongList.length > 0 ? "inline-block" : "none";
-			roundWrongBtn.style.display = roundWrongList.length > 0 ? "inline-block" : "none";
+			wrongBtn.style.display = !isExamMode() && wrongList.length > 0 ? "inline-block" : "none";
+			roundWrongBtn.style.display = !isExamMode() && roundWrongList.length > 0 ? "inline-block" : "none";
 		}
 
 		function toggleStatsVisibility() {
@@ -366,6 +760,192 @@
 				statsEl.classList.add("hidden");
 				btn.innerText = "정답률 보기";
 			}
+		}
+
+		function getSongKey(song) {
+			if (!song) return "";
+			return `${song.composer}::${song.title}::${song.file || song.youtube || ""}`;
+		}
+
+		function escapeHtml(value) {
+			return String(value)
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;")
+				.replace(/"/g, "&quot;");
+		}
+
+		function escapeAttribute(value) {
+			return escapeHtml(value).replace(/'/g, "&#39;");
+		}
+
+		function getStoredMemos() {
+			try {
+				return JSON.parse(localStorage.getItem(MEMO_STORAGE_KEY)) || {};
+			} catch (err) {
+				return {};
+			}
+		}
+
+		function setMemoStatus(message) {
+			document.getElementById("songMemoStatus").innerText = message;
+		}
+
+		function loadSongMemo() {
+			const memoEl = document.getElementById("songMemo");
+
+			if (!currentSong) {
+				memoEl.value = "";
+				setMemoStatus("플레이리스트를 불러오면 곡별로 자동 저장됩니다.");
+				return;
+			}
+
+			const memos = getStoredMemos();
+			memoEl.value = memos[getSongKey(currentSong)] || "";
+			setMemoStatus("이 곡 메모 자동 저장 중");
+		}
+
+		function saveSongMemo() {
+			if (!currentSong) {
+				setMemoStatus("플레이리스트를 먼저 불러오세요.");
+				return;
+			}
+
+			const memoEl = document.getElementById("songMemo");
+			const memos = getStoredMemos();
+			const key = getSongKey(currentSong);
+
+			if (memoEl.value.trim()) {
+				memos[key] = memoEl.value;
+			} else {
+				delete memos[key];
+			}
+
+			localStorage.setItem(MEMO_STORAGE_KEY, JSON.stringify(memos));
+			setMemoStatus("저장됨");
+			if (memoListVisible) renderMemoList();
+		}
+
+		function toggleSongMemo() {
+			if (isExamMode() || isFinishedMode()) return;
+			memoPanelVisible = !memoPanelVisible;
+			updateModeControls();
+		}
+
+		function toggleMemoList() {
+			if (isExamMode() || isFinishedMode()) return;
+			memoListVisible = !memoListVisible;
+			if (memoListVisible) renderMemoList();
+			updateModeControls();
+		}
+
+		function getMemoListSongs() {
+			const songs = [...playlist];
+			const seenKeys = new Set(songs.map(song => getSongKey(song)));
+			const storedMemos = getStoredMemos();
+
+			Object.keys(storedMemos).forEach(key => {
+				if (seenKeys.has(key)) return;
+				const [composer = "알 수 없음", title = key] = key.split("::");
+				songs.push({ composer, title, file: "", memoKey: key });
+			});
+
+			return songs;
+		}
+
+		function renderMemoList() {
+			const content = document.getElementById("memoListContent");
+			const songs = getMemoListSongs();
+			const memos = getStoredMemos();
+
+			if (songs.length === 0) {
+				content.innerHTML = `<div class="memo-list-subtitle">플레이리스트를 불러오면 곡별 메모를 볼 수 있습니다.</div>`;
+				return;
+			}
+
+			content.innerHTML = songs.map(song => {
+				const key = song.memoKey || getSongKey(song);
+				const memo = memos[key] || "";
+				return `
+					<div class="memo-list-item">
+						<div class="memo-list-title">${escapeHtml(song.title)}</div>
+						<div class="memo-list-subtitle">${escapeHtml(song.composer)}</div>
+						<textarea data-memo-key="${escapeAttribute(key)}" oninput="saveMemoListItem(this)">${escapeHtml(memo)}</textarea>
+					</div>
+				`;
+			}).join("");
+		}
+
+		function saveMemoListItem(textarea) {
+			const key = textarea.dataset.memoKey;
+			const memos = getStoredMemos();
+
+			if (textarea.value.trim()) {
+				memos[key] = textarea.value;
+			} else {
+				delete memos[key];
+			}
+
+			localStorage.setItem(MEMO_STORAGE_KEY, JSON.stringify(memos));
+
+			if (currentSong && key === getSongKey(currentSong)) {
+				document.getElementById("songMemo").value = textarea.value;
+				setMemoStatus("저장됨");
+			}
+		}
+
+		function makePanelDraggable(panelId, headerSelector) {
+			const panel = document.getElementById(panelId);
+			const header = panel.querySelector(headerSelector);
+			if (!panel || !header) return;
+
+			let dragState = null;
+
+			function startDrag(event) {
+				if (event.target.closest("button")) return;
+				if (window.matchMedia("(max-width: 700px)").matches) return;
+
+				const rect = panel.getBoundingClientRect();
+				dragState = {
+					startX: event.clientX,
+					startY: event.clientY,
+					left: rect.left,
+					top: rect.top,
+					width: rect.width,
+					height: rect.height
+				};
+
+				panel.style.left = `${rect.left}px`;
+				panel.style.top = `${rect.top}px`;
+				panel.style.right = "auto";
+				panel.style.bottom = "auto";
+				event.preventDefault();
+			}
+
+			function moveDrag(event) {
+				if (!dragState) return;
+
+				const maxLeft = window.innerWidth - dragState.width;
+				const maxTop = window.innerHeight - dragState.height;
+				const nextLeft = Math.min(Math.max(0, dragState.left + event.clientX - dragState.startX), Math.max(0, maxLeft));
+				const nextTop = Math.min(Math.max(0, dragState.top + event.clientY - dragState.startY), Math.max(0, maxTop));
+
+				panel.style.left = `${nextLeft}px`;
+				panel.style.top = `${nextTop}px`;
+			}
+
+			function endDrag() {
+				dragState = null;
+			}
+
+			header.addEventListener("mousedown", startDrag);
+			document.addEventListener("mousemove", moveDrag);
+			document.addEventListener("mouseup", endDrag);
+		}
+
+		function initializeDraggablePanels() {
+			makePanelDraggable("songMemoPanel", ".memo-panel-header");
+			makePanelDraggable("memoListPanel", ".memo-list-header");
 		}
 
 		/* ---------------- playlist ---------------- */
@@ -395,6 +975,57 @@
 			queue = shuffle(currentPool);
 		}
 
+		function ensurePlaylistLoaded() {
+			if (playlist.length > 0) return true;
+			alert("플레이리스트를 먼저 불러오세요.");
+			return false;
+		}
+
+		function resetRun(mode, pool) {
+			clearTimeout(window.nextSongTimer);
+			appMode = mode;
+			currentPool = [...pool];
+			totalSongs = currentPool.length;
+			queue = [];
+			refillQueue();
+
+			answered = false;
+			solvedCount = 0;
+			roundSolvedCount = 0;
+			lifetimeSolvedCount = 0;
+			roundNumber = 1;
+			examScore = 0;
+			studyKnownCount = 0;
+			studyUnknownCount = 0;
+			studyAnswerRevealed = false;
+			roundWrongList = [];
+			currentSong = null;
+			if (isExamMode() || isFinishedMode()) {
+				memoPanelVisible = false;
+				memoListVisible = false;
+			}
+
+			resetRoundStats();
+			hideStats();
+			updateModeText();
+			nextSong();
+		}
+
+		function startPracticeMode() {
+			if (!ensurePlaylistLoaded()) return;
+			resetRun(MODES.PRACTICE, playlist);
+		}
+
+		function startStudyMode() {
+			if (!ensurePlaylistLoaded()) return;
+			resetRun(MODES.STUDY, playlist);
+		}
+
+		function startExamMode() {
+			if (!ensurePlaylistLoaded()) return;
+			resetRun(MODES.EXAM, playlist);
+		}
+
 		function loadPlaylistFile() {
 			const file = document.getElementById("playlistFile").files[0];
 			if (!file) {
@@ -407,31 +1038,11 @@
 				try {
 					eval(e.target.result);
 
-					currentPool = [...playlist];
-					totalSongs = currentPool.length;
-
 					wrongList = [];
 					roundWrongList = [];
 
-					examMode = false;
-					examFinished = false;
-					examScore = 0;
-
-					solvedCount = 0;
-					roundSolvedCount = 0;
-					lifetimeSolvedCount = 0;
-					roundNumber = 1;
-
 					initializeStats();
-					refillQueue();
-					nextSong();
-
-					statsVisible = false;
-					document.getElementById("stats").classList.add("hidden");
-					document.getElementById("toggleStatsBtn").innerText = "정답률 보기";
-
-					document.getElementById("mode").innerText = "현재 모드: 연습 모드";
-					updateWrongNoteButtons();
+					resetRun(MODES.PRACTICE, playlist);
 
 					alert("플레이리스트 로드 완료!");
 				} catch (err) {
@@ -532,6 +1143,7 @@
 			if (queue.length === 0) return;
 
 			answered = false;
+			studyAnswerRevealed = false;
 			currentSong = queue.pop();
 
 			const youtubePlayer = document.getElementById("youtubePlayer");
@@ -564,30 +1176,36 @@
 			document.getElementById("titleAnswer").value = "";
 			document.getElementById("result").innerText = "";
 			document.getElementById("hint").innerText = "";
+			loadSongMemo();
 
 			updateProgress();
 			updateStats();
-			updateWrongNoteButtons();
+			updateModeControls();
 		}
 
 		function nextSong() {
-			if (examFinished) return;
+			if (isFinishedMode()) return;
+
+			if (isStudyMode() && currentSong && !answered) {
+				document.getElementById("result").innerText = "아는 곡 또는 모르는 곡을 먼저 선택하세요.";
+				return;
+			}
 
 			const audio = document.getElementById("audioPlayer");
 			audio.pause();
 			audio.currentTime = 0;
 
 			if (queue.length === 0) {
-				if (examMode) {
+				if (isExamMode()) {
 					return;
-				} else {
-					roundNumber++;
-					roundSolvedCount = 0;
-					roundWrongList = [];
-					resetRoundStats();
-					refillQueue();
-					document.getElementById("result").innerText = `${roundNumber - 1}회독 완료! 새 라운드를 시작합니다.`;
 				}
+
+				roundNumber++;
+				roundSolvedCount = 0;
+				roundWrongList = [];
+				resetRoundStats();
+				refillQueue();
+				document.getElementById("result").innerText = `${roundNumber - 1}회독 완료! 새 라운드를 시작합니다.`;
 			}
 
 			loadSong();
@@ -596,7 +1214,7 @@
 		/* ---------------- exam ---------------- */
 
 		function finishExam() {
-			examFinished = true;
+			appMode = MODES.EXAM_FINISHED;
 
 			const rate = Math.round((examScore / totalSongs) * 100);
 			let message = `시험 종료! 점수: ${examScore}/${totalSongs} (${rate}%)`;
@@ -611,44 +1229,39 @@
 			}
 
 			document.getElementById("result").innerText = message;
-			document.getElementById("mode").innerText = "현재 모드: 시험 종료";
-
-			updateWrongNoteButtons();
+			updateModeText();
+			updateProgress();
+			updateModeControls();
 		}
 
-		function toggleExamMode() {
-			examMode = !examMode;
-			examFinished = false;
+		function recordResult(song, isCorrect) {
+			stats[song.title].total++;
 
-			currentPool = [...playlist];
-			totalSongs = currentPool.length;
+			if (roundStats[song.title]) {
+				roundStats[song.title].total++;
+			}
 
-			queue = [];
-			refillQueue();
+			if (isCorrect) {
+				stats[song.title].correct++;
+				if (roundStats[song.title]) {
+					roundStats[song.title].correct++;
+				}
 
-			// 시험/연습 상태 초기화
-			solvedCount = 0;
-			roundSolvedCount = 0;
-			examScore = 0;
-			roundNumber = 1;
-			lifetimeSolvedCount = 0;
+				wrongList = wrongList.filter(s => s !== song);
+				roundWrongList = roundWrongList.filter(s => s !== song);
+				return;
+			}
 
-			roundWrongList = [];
-			resetRoundStats();
+			if (!wrongList.includes(song)) wrongList.push(song);
+			if (!roundWrongList.includes(song)) roundWrongList.push(song);
+		}
 
-			document.getElementById("mode").innerText =
-				examMode ? "현재 모드: 시험 모드" : "현재 모드: 연습 모드";
-
-			statsVisible = false;
-			document.getElementById("stats").classList.add("hidden");
-			document.getElementById("toggleStatsBtn").innerText = "정답률 보기";
-
-			updateWrongNoteButtons();
-			nextSong();
+		function getExactAnswer(song) {
+			return `정답: ${song.composer} - ${song.title}`;
 		}
 
 		function checkAnswer() {
-			if (answered || examFinished) return;
+			if (answered || isFinishedMode() || isStudyMode()) return;
 
 			const composerInput = document.getElementById("composerAnswer").value.trim();
 			const titleInput = document.getElementById("titleAnswer").value.trim();
@@ -663,40 +1276,20 @@
 			const composerScore = similarity(composerInput, currentSong.composer);
 			const titleScore = getTitleScore(titleInput, currentSong);
 
-			// 전체 누적 통계
-			stats[currentSong.title].total++;
-
-			// 이번 회독 통계
-			if (roundStats[currentSong.title]) {
-				roundStats[currentSong.title].total++;
-			}
-
 			const isCorrect = composerScore >= 0.7 && titleScore >= 0.7;
-			const exactAnswer = `정답: ${currentSong.composer} - ${currentSong.title}`;
+			const exactAnswer = getExactAnswer(currentSong);
+			recordResult(currentSong, isCorrect);
 
 			if (isCorrect) {
-				stats[currentSong.title].correct++;
-				if (roundStats[currentSong.title]) {
-					roundStats[currentSong.title].correct++;
-				}
-
-				if (examMode) examScore++;
-
-				document.getElementById("result").innerText = `✅ 정답!\n${exactAnswer}`;
-
-				// 전체 약점 목록에서 제거
-				wrongList = wrongList.filter(s => s !== currentSong);
-
-				// 이번 회독 오답에서도 제거
-				roundWrongList = roundWrongList.filter(s => s !== currentSong);
+				if (isExamMode()) examScore++;
+				document.getElementById("result").innerText =
+					isExamMode() ? "답안 기록됨." : `✅ 정답!\n${exactAnswer}`;
 			} else {
-				if (!wrongList.includes(currentSong)) wrongList.push(currentSong);
-				if (!roundWrongList.includes(currentSong)) roundWrongList.push(currentSong);
-
-				document.getElementById("result").innerText = `❌ 오답!\n${exactAnswer}`;
+				document.getElementById("result").innerText =
+					isExamMode() ? "답안 기록됨." : `❌ 오답!\n${exactAnswer}`;
 			}
 
-			if (examMode) {
+			if (isExamMode()) {
 				solvedCount++;
 			} else {
 				roundSolvedCount++;
@@ -705,62 +1298,25 @@
 
 			updateProgress();
 			updateStats();
-			updateWrongNoteButtons();
+			updateModeControls();
 
-			if (examMode && solvedCount >= totalSongs) {
-				setTimeout(finishExam, 1000);
+			if (isExamMode() && solvedCount >= totalSongs) {
+				window.nextSongTimer = setTimeout(finishExam, 1000);
 			} else {
-				setTimeout(nextSong, 1000);
+				window.nextSongTimer = setTimeout(nextSong, 1000);
 			}
 		}
 
 		/* ---------------- misc ---------------- */
 
 		function startWrongNoteMode() {
-			examMode = false;
-			examFinished = false;
-
-			currentPool = [...wrongList];
-			totalSongs = currentPool.length;
-
-			queue = [];
-			refillQueue();
-
-			roundSolvedCount = 0;
-			roundNumber = 1;
-			lifetimeSolvedCount = 0;
-			roundWrongList = [];
-			resetRoundStats();
-
-			document.getElementById("mode").innerText = "현재 모드: 이번 회독 오답 복습";
-
-			statsVisible = false;
-			document.getElementById("stats").classList.add("hidden");
-			document.getElementById("toggleStatsBtn").innerText = "정답률 보기";
-
-			updateWrongNoteButtons();
-			nextSong();
+			if (wrongList.length === 0) return;
+			resetRun(MODES.WRONG_ALL, wrongList);
 		}
 
 		function startRoundWrongNoteMode() {
-			examMode = false;
-			examFinished = false;
-
-			currentPool = [...roundWrongList];
-			totalSongs = currentPool.length;
-
-			queue = [];
-			refillQueue();
-
-			roundSolvedCount = 0;
-			roundNumber = 1;
-			lifetimeSolvedCount = 0;
-			resetRoundStats();
-
-			document.getElementById("mode").innerText = "현재 모드: 이번 회독 오답 복습";
-
-			updateWrongNoteButtons();
-			nextSong();
+			if (roundWrongList.length === 0) return;
+			resetRun(MODES.WRONG_ROUND, roundWrongList);
 		}
 
 		function updateProgress() {
@@ -768,12 +1324,20 @@
 			let displayTotal = totalSongs;
 			let percent = 0;
 
-			if (examMode) {
+			if (isExamMode() || isFinishedMode()) {
 				displaySolved = solvedCount;
 				percent = totalSongs ? (solvedCount / totalSongs) * 100 : 0;
 
 				document.getElementById("progressSubText").innerText =
-					`시험 진행 중 · 점수 ${examScore}/${Math.max(solvedCount, 1)}`;
+					isFinishedMode()
+						? `시험 종료 · 점수 ${examScore}/${totalSongs}`
+						: `시험 진행 중 · 점수 ${examScore}/${Math.max(solvedCount, 1)}`;
+			} else if (isStudyMode()) {
+				displaySolved = roundSolvedCount;
+				percent = totalSongs ? (roundSolvedCount / totalSongs) * 100 : 0;
+
+				document.getElementById("progressSubText").innerText =
+					`${roundNumber}회독 · 외움 ${studyKnownCount} · 다시 ${studyUnknownCount}`;
 			} else {
 				displaySolved = roundSolvedCount;
 				percent = totalSongs ? (roundSolvedCount / totalSongs) * 100 : 0;
@@ -802,8 +1366,42 @@
 			audio.play();
 		}
 
+		function showStudyAnswer() {
+			if (!isStudyMode() || !currentSong) return;
+
+			studyAnswerRevealed = true;
+			document.getElementById("result").innerText = getExactAnswer(currentSong);
+			updateModeControls();
+		}
+
+		function markStudyResult(isKnown) {
+			if (!isStudyMode() || answered || !currentSong) return;
+
+			answered = true;
+			studyAnswerRevealed = true;
+			recordResult(currentSong, isKnown);
+
+			if (isKnown) {
+				studyKnownCount++;
+			} else {
+				studyUnknownCount++;
+			}
+
+			roundSolvedCount++;
+			lifetimeSolvedCount++;
+
+			document.getElementById("result").innerText =
+				`${isKnown ? "아는 곡" : "모르는 곡"}\n${getExactAnswer(currentSong)}`;
+
+			updateProgress();
+			updateStats();
+			updateModeControls();
+
+			window.nextSongTimer = setTimeout(nextSong, 1000);
+		}
+
 		function showHint() {
-			if (examMode) return;
+			if (!isPracticeLikeMode()) return;
 
 			document.getElementById("hint").innerText =
 				`힌트: 작곡가 ${currentSong.composer[0]}..., 제목 글자 수 ${currentSong.title.length}`;
@@ -962,6 +1560,8 @@
 			}
 		}
 		initializeTheme();
+		initializeDraggablePanels();
+		updateModeControls();
 
 		function secretMessage() {
 			alert("하지만 너무 퍼지지는 않았으면 좋겠어요. 다 공부를 쉽게 해버리면 평균이 올라가고 이 웹앱의 가치가 떨어지니까...");
@@ -969,16 +1569,22 @@
 	</script>
 
 	<footer>
-		<div>© 2026 서울대학교 vyurihwa</div>
+		<div>© 2026 서울대학교 vyuryhwa</div>
 		<div>무단 복제 및 재배포를 허용하고 멋대로 뚝스딱스 고쳐쓰시는 건 더 멋진 선택입니다</div>
-		<div>작곡/음악학과 내 전래를 적극 권장합니다... 30년 후쯤에 이걸 썼다는 사람들이 속출하면 재밌겠다
-			<button onclick="secretMessage()">?</button>
-		</div>
-		<div>아 상업적 사용 안 됩니다. 왜냐하면 만들기 어려운 건 아니지만 내가 배 아프잖아...</div>
-		<div>서양음악사 시험 공부하기 귀찮아서 만들었습니다 음악학과(&복부전생) 화이팅~</div>
-		<div>이방인과 소외된 이들에게는 무조건적 환대를 해주시길...</div>
 		<div>🌈 🩷 🎛️ ✊</div>
 	</footer>
+
+	<details id="developerMessageToggle">
+		<summary>개발자 메시지 보기</summary>
+		<div class="developer-message-body">
+			<div>작곡/음악학과 내 전래를 적극 권장합니다... 30년 후쯤에 이걸 썼다는 사람들이 속출하면 재밌겠다
+				<button onclick="secretMessage()">?</button>
+			</div>
+			<div>아 상업적 사용 안 됩니다. 왜냐하면 만들기 어려운 건 아니지만 내가 배 아프잖아...</div>
+			<div>서양음악사 시험 공부하기 귀찮아서 만들었습니다 음악학과(&복부전생) 화이팅~</div>
+			<div>이방인과 소외된 이들에게는 무조건적 환대를 해주시길...</div>
+		</div>
+	</details>
 </body>
 
 </html>
