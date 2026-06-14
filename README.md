@@ -24,16 +24,19 @@
 ```text
 music-listening-test-trainer/
 ├── index.html
-├── playlist_2026musichistory3_midterm.js
-├── playlist_2026musichistory3_final.js
+├── 2026musichistory1_midterm.js
+├── 2026musichistory1_final.js
+├── 2026musichistory3_midterm.js
+├── 2026musichistory3_final.js
 └── audio/
-    ├── ...
+    ├── musichistory1_midterm/
+    ├── musichistory1_final/
+    ├── musichistory3_midterm/
     └── musichistory3_final/
-        ├── ...
-        └── list.txt
 ```
 
 `audio/`는 로컬 음원 폴더입니다. 큰 오디오 파일은 GitHub에 올리지 않는 것을 권장합니다.
+MP3 파일은 `.gitignore`로 제외하고, 각 하위 폴더는 `.gitkeep`으로 구조만 보존합니다.
 
 ## 플레이리스트 형식
 
@@ -137,10 +140,12 @@ const key = `${song.composer}::${song.title}::${song.file || song.youtube || ""}
 
 ## 현재 포함된 플레이리스트
 
-- `playlist_2026musichistory3_midterm.js`
-- `playlist_2026musichistory3_final.js`
+- `2026musichistory1_midterm.js`
+- `2026musichistory1_final.js`
+- `2026musichistory3_midterm.js`
+- `2026musichistory3_final.js`
 
-`playlist_2026musichistory3_final.js`는 서양음악사3 기말 감상시험 20곡 목록을 기준으로 만들었습니다.
+각 playlist는 해당 학기/시험 감상시험 목록을 기준으로 만들었습니다.
 
 ## 새 플레이리스트 만들기
 
